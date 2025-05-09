@@ -13,10 +13,10 @@ This repository provides license detection tools for multiple ecosystems using P
 
 | Folder Name                       | Ecosystem | Detects From                                    | UI Title             |
 |----------------------------------|-----------|-------------------------------------------------|----------------------|
-| `ubuntu_license_webapp_cleaned_final` | Ubuntu    | Ubuntu changelogs, Debian metadata               | Ubuntu License Tool  |
-| `npm_license_webapp_only_fixed_ui`   | NPM       | NPM Registry, GitHub fallback                    | NPM License Tool     |
-| `maven_license_webapp_final_v2`      | Maven     | Maven Central (pom.xml parsing)                 | Maven License Tool   |
-| `pypi_license_webapp_final_ready`    | PyPI      | PyPI API, project homepage fallback             | PyPI License Tool    |
+| `ubuntu` | Ubuntu    | Ubuntu changelogs, Debian metadata               | Ubuntu License Tool  |
+| `npm`   | NPM       | NPM Registry, GitHub fallback                    | NPM License Tool     |
+| `maven`      | Maven     | Maven Central (pom.xml parsing)                 | Maven License Tool   |
+| `pypi`    | PyPI      | PyPI API, project homepage fallback             | PyPI License Tool    |
 
 ---
 
