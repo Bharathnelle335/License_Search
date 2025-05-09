@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>PyPI License Detector</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .center-card {
+      width: 100%;
+      max-width: 500px;
+      padding: 2rem;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      text-align: center;
+    }
+    .btn-lg {
+      padding: 0.75rem 1.5rem;
+      font-size: 1.25rem;
+    }
+    .form-control-lg {
+      font-size: 1.2rem;
+      padding: 0.6rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="center-card">
+    <h2 class="mb-4">PyPI License Detector</h2>
+    <div id="upload-form">
+      <p>Upload an Excel (.xlsx) file with <strong>component_name</strong> and <strong>version</strong>.</p>
+      <div class="mb-3">
+        <label for="file" class="form-label">
+          <i class="bi bi-upload" style="font-size: 2rem;"></i><br>
+          <span>Select Excel File</span>
+        </label>
+        <input class="form-control form-control-lg" type="file" id="file" accept=".xlsx">
+      </div>
+      <button class="btn btn-primary btn-lg" onclick="uploadFile()">
+        <i class="bi bi-play-circle"></i> Upload & Analyze
+      </button>
+    </div>
+    <div id="progress-container" style="display:none;" class="mt-4">
+      <p>Processing components...</p>
+      <div class="progress">
+        <div id="progress-bar" class="progress-bar progress-bar-striped" role="progressbar" style="width: 0%;">0%</div>
+      </div>
+    </div>
+    <div id="download-section" style="display:none;" class="mt-4">
+      <a id="download-link" class="btn btn-success btn-lg" download>
+        <i class="bi bi-download"></i> Download Result Excel
+      </a>
+    </div>
+    <footer class="mt-4 text-muted small">© 2025 OSS License Checker | Internal Use</footer>
+  </div>
+  <script>
+    function uploadFile() {
+      const fileInput = document.getElementById('file');
+      const file = fileInput.files[0];
+      if (!file) return;
+      document.getElementById('upload-form').style.display = 'none';
+      document.getElementById('progress-container').style.display = 'block';
+      const formData = new FormData();
+      formData.append('file', file);
+      fetch('/upload', { method: 'POST', body: formData })
+        .then(response => response.json())
+        .then(() => {
+          const interval = setInterval(() => {
+            fetch('/progress')
+              .then(res => res.json())
+              .then(data => {
+                if (data.total === 0) return;
+                const percent = Math.floor((data.current / data.total) * 100);
+                const bar = document.getElementById('progress-bar');
+                bar.style.width = percent + '%';
+                bar.innerText = percent + '%';
+                if (percent >= 100) {
+                  clearInterval(interval);
+                  document.getElementById('download-link').href = '/download/result_' + file.name;
+                  document.getElementById('download-section').style.display = 'block';
+                }
+              });
+          }, 1000);
+        })
+        .catch(err => {
+          alert('Upload failed.');
+          console.error(err);
+        });
+    }
+  </script>
+</body>
+</html>
